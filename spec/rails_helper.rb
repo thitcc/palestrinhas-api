@@ -1,3 +1,9 @@
+# It's crucial to require SimpleCov at the very top of the file and before any other code is loaded.
+# The SimpleCov.start must be issued prior to requiring any application code to ensure accurate
+# code coverage analysis. Failing to do so may result in inaccurate coverage reporting.
+require 'simplecov'
+SimpleCov.start 'rails'
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
