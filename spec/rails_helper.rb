@@ -2,7 +2,20 @@
 # The SimpleCov.start must be issued prior to requiring any application code to ensure accurate
 # code coverage analysis. Failing to do so may result in inaccurate coverage reporting.
 require 'simplecov'
-SimpleCov.start 'rails'
+SimpleCov.start 'rails' do
+  # The directories listed in the filter below are currently not being used in the project.
+  # They are being ignored to provide a more accurate representation of the actual code coverage.
+  # Once any of these directories are utilized, please remove them from this filter list.
+  ['app/channels', 'app/mailers', 'app/jobs'].each do |filter|
+    add_filter filter
+  end
+
+  add_filter do |source_file|
+    source_file.lines.count < 3
+  end
+
+  maximum_coverage_drop 1
+end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
