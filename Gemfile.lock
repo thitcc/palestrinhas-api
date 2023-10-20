@@ -91,6 +91,8 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
+    faker (3.2.1)
+      i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.1)
@@ -208,6 +210,7 @@ DEPENDENCIES
   debug
   dotenv-rails (~> 2.1, >= 2.1.1)
   factory_bot_rails
+  faker
   pg (~> 1.1)
   pry-byebug
   puma (~> 5.0)
