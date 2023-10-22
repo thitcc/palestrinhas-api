@@ -1,8 +1,16 @@
+# The LectureOrganizerService class is designed to organize a given set of lectures into two tracks
+# (Track A and Track B) within a day, adhering to specific time constraints for morning and afternoon sessions.
+# Each track has a morning session starting at 9:00 AM and ending at 12:00 PM, followed by a lunch break,
+# and an afternoon session starting at 1:00 PM and ending at 5:00 PM. A networking event is scheduled at 5:00 PM.
+#
+# In case all lectures cannot be allocated within the two tracks, a message indicating the issue is returned.
+# If there are no lectures to organize, a different message is returned.
+#
 class LectureOrganizerService
   MORNING_SESSION_START   = 9 * 60   # 9:00 AM
   MORNING_SESSION_END     = 12 * 60  # 12:00 PM
   AFTERNOON_SESSION_START = 13 * 60  # 13:00 PM
-  AFTERNOON_SESSION_END   = 17 * 60  # 17:00PM
+  AFTERNOON_SESSION_END   = 17 * 60  # 17:00 PM
   LUNCH_TIME = "12:00 Almoço\n"
   NETWORKING_EVENT = '17:00 Evento de Networking'
 
