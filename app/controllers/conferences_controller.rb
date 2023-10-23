@@ -38,6 +38,18 @@ class ConferencesController < ApplicationController
     @conference.destroy
   end
 
+  def organize
+    uploaded_file = params[:file]
+
+    if uploaded_file.present?
+      lectures = process_file(uploaded_file)
+      organized_schedule = LectureOrganizerBacktrackService.organize(lectures)
+      render json: { schedule: organized_schedule }, status: :ok
+    else
+      render json: { error: 'Arquivo não fornecido' }, status: :bad_request
+    end
+  end
+
   private
 
   def set_conference
@@ -46,5 +58,17 @@ class ConferencesController < ApplicationController
 
   def conference_params
     params.require(:conference).permit(:title, :start_date, :end_date)
+  end
+
+  def process_file file
+    file_content = file.read.force_encoding('UTF-8')
+
+    lectures = []
+    file_content.split("\n").each do |line|
+      title, duration = line.match(/(.+) (\d+min|lightning)/).captures
+      duration = duration == 'lightning' ? 5 : duration.to_i
+      lectures << Lecture.new(title: title, duration: duration)
+    end
+    lectures
   end
 end

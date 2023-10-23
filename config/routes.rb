@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resources :tracks
-  resources :conferences
+  resources :conferences do
+    post '/organize', to: 'conferences#organize', on: :collection
+  end
   resources :lectures
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
