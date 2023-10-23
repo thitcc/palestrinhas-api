@@ -44,6 +44,6 @@ class LecturesController < ApplicationController
     end
 
     def lecture_params
-      params.require(:lecture).permit(:title, :duration, :track_id)
+      params.require(:lecture).permit(:title, :duration, :session, :starting_time, :track_id)
     end
 end

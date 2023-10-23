@@ -35,7 +35,13 @@ RSpec.describe '/lectures', type: :request do
   end
 
   describe 'POST /lectures' do
-    let(:valid_attributes) { { title: 'Foobar', duration: 30, track_id: track.id } }
+    let(:valid_attributes) do
+      { title: 'Foobar',
+        duration: 30,
+        track_id: track.id,
+        session: 'morning',
+        starting_time: 1 }
+    end
     let(:invalid_attributes) { { title: 'Foobar' } }
 
     context 'when the request is valid' do
