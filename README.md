@@ -35,7 +35,6 @@ git clone https://github.com/seu_usuario/palestrinhas-api.git
 ### Instale as dependências:
 
 ```bash
-cd palestrinhas-api
 bundle install
 ```
 
@@ -66,6 +65,22 @@ Agora, a API estará disponível em [http://localhost:3000](http://localhost:300
 ```bash
 rspec
 ```
+
+---
+
+## Verificando a Cobertura de Testes
+
+Após executar os testes com `rspec`, a gem `simplecov` irá gerar automaticamente um relatório de cobertura de testes. Este relatório é salvo em uma pasta chamada `coverage/`.
+
+Para visualizar a porcentagem de cobertura dos testes, siga os passos abaixo:
+
+1. Navegue até a pasta `coverage/` no diretório raiz do projeto.
+2. Abra o arquivo `index.html` em um navegador web.
+
+Este arquivo `index.html` fornece uma visão detalhada da cobertura de testes, incluindo a porcentagem de código testado em cada arquivo.
+
+![image](https://github.com/thitcc/palestrinhas-api/assets/30185790/782bbdba-84e8-4770-9c48-5cbf6a7a80a5)
+
 
 ---
 
