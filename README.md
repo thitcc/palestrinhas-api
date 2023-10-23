@@ -14,7 +14,7 @@ Este projeto foi desenvolvido para auxiliar na organização de uma conferência
 
 ## Funcionalidades
 
-- CRUD de palestras
+- CRUD de palestras / tracks e conferências
 - Endpoint para upload de arquivo com listagem de palestras
 - Algoritmo para organização de palestras em tracks
 
@@ -57,6 +57,8 @@ rails s
 
 Agora, a API estará disponível em [http://localhost:3000](http://localhost:3000).
 
+---
+
 ## Testes
 
 ### Para executar os testes, utilize o comando:
@@ -64,6 +66,20 @@ Agora, a API estará disponível em [http://localhost:3000](http://localhost:300
 ```bash
 rspec
 ```
+
+---
+
+## Nota Sobre o Desenvolvimento do Algoritmo de Alocação de Palestras
+
+> Durante o desenvolvimento deste projeto, o primeiro algoritmo que implementei para a alocação de palestras era relativamente simples. Embora fosse funcional, ele não fornecia soluções ótimas para o problema em questão. Em um contexto profissional, eu não teria mantido esse código no repositório final.
+>
+> Optei por manter esse algoritmo inicial no histórico do projeto para documentar todo o processo de pensamento e desenvolvimento que me levou à solução final. A abordagem de backtracking e a modelagem que acabaram sendo implementadas foram o resultado desse processo iterativo.
+>
+> Mantendo essas etapas registradas, espero que isso possa servir como um recurso educacional para entender não apenas "o que" foi feito, mas também "como" e "por que" cheguei à solução final.
+>
+> Os arquivos de algoritmo em questão estão na pasta app/services/organizer
+
+---
 
 ## Postman Collection
 
