@@ -2,6 +2,8 @@ require 'rails_helper'
 require_relative '../../fixtures/lectures_data'
 
 RSpec.describe Organizer::LectureOrganizerService, type: :service do
+  let!(:conference) { create(:conference) }
+
   let!(:lectures_input) { LECTURE_DATA.dup }
   let!(:expected_schedule_output) { File.read(Rails.root.join('spec/fixtures/output_example.txt')) }
 
@@ -23,9 +25,8 @@ RSpec.describe Organizer::LectureOrganizerService, type: :service do
     end
 
     context 'when not all lectures can be allocated within the tracks' do
-      let!(:conference) { create(:conference) }
-      let!(:track) { create(:track, conference: conference) }
-      let!(:lectures) { create_list(:lecture, 99, track: track) }
+      let(:track) { create(:track, conference: conference) }
+      let(:lectures) { create_list(:lecture, 99, track: track) }
 
       it 'returns a message indicating not all lectures could be allocated' do
         result = described_class.organize(lectures)

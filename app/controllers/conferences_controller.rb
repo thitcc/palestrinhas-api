@@ -1,5 +1,5 @@
 class ConferencesController < ApplicationController
-  before_action :set_conference, only: %i[show update destroy]
+  before_action :set_conference, only: %i[show update destroy organize]
 
   # GET /conferences
   def index
@@ -43,7 +43,7 @@ class ConferencesController < ApplicationController
 
     if uploaded_file.present?
       lectures = process_file(uploaded_file)
-      organized_schedule = LectureOrganizerBacktrackService.organize(lectures)
+      organized_schedule = Organizer::LectureOrganizerBacktrackService.organize(@conference, lectures)
       render json: { schedule: organized_schedule }, status: :ok
     else
       render json: { error: 'Arquivo não fornecido' }, status: :bad_request

@@ -8,34 +8,34 @@ module Organizer
   #   schedule = LectureOrganizerBacktrackService.organize(lectures)
   #
   class LectureOrganizerBacktrackService
-    MORNING_SESSION_START   = 9 * 60   # 9:00 AM
-    MORNING_SESSION_END     = 12 * 60  # 12:00 PM
-    AFTERNOON_SESSION_START = 13 * 60  # 13:00 PM
-    AFTERNOON_SESSION_END   = 17 * 60  # 17:00 PM
-    NETWORKING_EVENT_START  = 16 * 60  # 16:00 PM
-    MORNING_SESSION_LENGTH   = MORNING_SESSION_END - MORNING_SESSION_START
-    AFTERNOON_SESSION_LENGTH = AFTERNOON_SESSION_END - AFTERNOON_SESSION_START
-    LUNCH_TIME = "12:00 Almoço\n".freeze
-    TRACK_COUNT = 2
-
+    NETWORKING_EVENT_START_DEFAULT = 16 * 60 # 16:00 PM
     class << self
       # Organizes the given lectures into a conference schedule over multiple tracks.
-      def organize(lectures)
+      def organize conference, lectures
         return 'No lectures to organize' if lectures.empty?
 
-        @best_schedule = ''
-        track_char_code = 65 # A
+        @best_schedule = {
+          lectures: [],
+          networking_event_start: nil
+        }
         current_schedule = []
+        @last_lecture = nil
 
-        TRACK_COUNT.times do
+        conference.tracks.each do |track|
           # Initializes variables to track the best solution found so far
+          @current_track = track
           @best_track = []
           @best_fitness = Float::INFINITY # Assumes a lower fitness value is better
-          backtrack([], lectures, MORNING_SESSION_START, AFTERNOON_SESSION_START, fitness_penalty(@best_track))
-          current_schedule, lectures = format_schedule(track_char_code, @best_track, lectures)
-          @best_schedule += current_schedule
-          track_char_code += 1
+          backtrack([],
+                    lectures,
+                    @current_track.morning_session_start,
+                    @current_track.afternoon_session_start,
+                    fitness_penalty(@best_track))
+          current_schedule, lectures = fill_schedule(@best_track, lectures)
+          @best_schedule[:lectures] << current_schedule
         end
+
+        set_networking_event_start_time
 
         if lectures.empty?
           @best_schedule
@@ -58,8 +58,8 @@ module Organizer
         next_lecture = remaining_lectures.pop
 
         # Tries to allocate in the morning session first
-        if morning_time + next_lecture.duration <= MORNING_SESSION_END
-          current_schedule.push([:morning, morning_time, next_lecture])
+        if morning_time + next_lecture.duration <= @current_track.morning_session_end
+          current_schedule << [:morning, morning_time, next_lecture]
           backtrack(current_schedule,
                     remaining_lectures,
                     morning_time + next_lecture.duration,
@@ -69,8 +69,8 @@ module Organizer
         end
 
         # Tries to allocate in the afternoon session
-        if afternoon_time + next_lecture.duration <= AFTERNOON_SESSION_END
-          current_schedule.push([:afternoon, afternoon_time, next_lecture])
+        if afternoon_time + next_lecture.duration <= @current_track.afternoon_session_end
+          current_schedule << [:afternoon, afternoon_time, next_lecture]
           backtrack(current_schedule,
                     remaining_lectures,
                     morning_time,
@@ -84,8 +84,8 @@ module Organizer
 
       # Calculates the fitness penalty of the current schedule based on the unused session time.
       def fitness_penalty schedule
-        remaining_morning_time   = MORNING_SESSION_LENGTH
-        remaining_afternoon_time = AFTERNOON_SESSION_LENGTH
+        remaining_morning_time = morning_time_length
+        remaining_afternoon_time = afternoon_time_length
 
         schedule.each do |session, _time, lecture|
           if session == :morning
@@ -98,62 +98,46 @@ module Organizer
         remaining_morning_time + remaining_afternoon_time
       end
 
-      #
-      # The formatting methods are separated to ease the maintenance of the code.
-      # If there is a need to make any changes in formatting, this can be done
-      # in an isolated manner in each function, without affecting the rest of the code.
-      #
+      # Memoize the calculation of the time for each fitness_penalty to reduce the time of operations
+      def morning_time_length
+        @morning_time_length ||= @current_track.morning_session_end - @current_track.morning_session_start
+      end
 
-      # Formats the schedule for a specific track.
-      def format_schedule track_char_code, track, lectures
-        organized_track = "Track #{track_char_code.chr}:\n"
+      def afternoon_time_length
+        @afternoon_time_length ||= @current_track.afternoon_session_end - @current_track.afternoon_session_start
+      end
 
-        # Sorting by time -> [[:session, time, lecture]]
-        track = track.sort_by { |sub_array| sub_array[1] }
+      # Sorts the current schedule and remove all lectures from the remaining lectures
+      def fill_schedule current_schedule, lectures
+        arr = []
 
-        # Split the array into two with a condition
-        morning_session, afternoon_session = track.partition { |e| e[0] == :morning }
-
-        morning_session.each do |_, time, lecture|
-          organized_track += format_lecture(time, lecture)
+        current_schedule.each do |session, time, lecture|
+          arr << Lecture.create(title: lecture.title,
+                                duration: lecture.duration,
+                                session: session,
+                                starting_time: time,
+                                track: @current_track)
           lectures.delete(lecture)
         end
 
-        organized_track += LUNCH_TIME
+        arr = arr.sort_by(&:starting_time)
 
-        afternoon_session.each do |_, time, lecture|
-          organized_track += format_lecture(time, lecture)
-          lectures.delete(lecture)
-        end
+        @last_lecture = arr.last
 
-        organized_track += format_networking_event(afternoon_session.last)
+        arr = ActiveModelSerializers::SerializableResource.new(
+          arr,
+          each_serializer: LectureSerializer::SimpleLectureSerializer
+        )
 
-        return organized_track, lectures
+        return arr, lectures
       end
 
-      # Formats a single lecture entry for the schedule.
-      def format_lecture minutes, lecture
-        "#{format_time(minutes)} #{lecture.title} #{lecture.duration}min\n"
-      end
+      def set_networking_event_start_time
+        networking_event_time = @last_lecture.starting_time + @last_lecture.duration
 
-      # Converts minutes to the HH:MM format.
-      def format_time minutes
-        hours = minutes / 60
-        minutes %= 60
-        format('%02d:%02d', hours, minutes)
-      end
+        networking_event_time = NETWORKING_EVENT_START_DEFAULT if networking_event_time < NETWORKING_EVENT_START_DEFAULT
 
-      # Formats the networking event entry for the schedule, ensuring that it starts at or after the
-      # defined NETWORKING_EVENT_START time.
-      def format_networking_event afternoon_closing
-        final_time = afternoon_closing[1]
-        lecture = afternoon_closing[2]
-
-        networking_event_start = final_time + lecture.duration
-
-        networking_event_start = NETWORKING_EVENT_START if networking_event_start < NETWORKING_EVENT_START
-
-        "#{format_time(networking_event_start)} Evento de Networking\n"
+        @best_schedule[:networking_event_start] = networking_event_time
       end
     end
   end
