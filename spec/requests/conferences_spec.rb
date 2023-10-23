@@ -87,4 +87,29 @@ RSpec.describe '/conferences', type: :request do
 
     it_behaves_like 'http status code', 204
   end
+
+  describe 'POST /conferences/:id/organize' do
+    let!(:conference) { create(:conference) }
+    let(:file) { fixture_file_upload('files/lectures_input.txt', 'text/plain') }
+
+    context 'when the file is provided' do
+      before { post "/conferences/#{conference.id}/organize", params: { file: file } }
+
+      it 'returns the organized schedule' do
+        expect(json['schedule']).to be_present
+      end
+
+      it_behaves_like 'http status code', 200
+    end
+
+    context 'when the file is not provided' do
+      before { post "/conferences/#{conference.id}/organize" }
+
+      it 'returns an error message' do
+        expect(json['error']).to eq('Arquivo não fornecido')
+      end
+
+      it_behaves_like 'http status code', 400
+    end
+  end
 end

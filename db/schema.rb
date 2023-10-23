@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_23_125852) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_23_172035) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,6 +27,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_125852) do
     t.integer "duration", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "track_id", null: false
+    t.string "session"
+    t.integer "starting_time"
+    t.index ["track_id"], name: "index_lectures_on_track_id"
+    t.check_constraint "session::text = ANY (ARRAY['morning'::character varying, 'afternoon'::character varying]::text[])", name: "check_valid_session"
   end
 
   create_table "tracks", force: :cascade do |t|
@@ -42,5 +47,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_125852) do
     t.index ["conference_id"], name: "index_tracks_on_conference_id"
   end
 
+  add_foreign_key "lectures", "tracks"
   add_foreign_key "tracks", "conferences"
 end
