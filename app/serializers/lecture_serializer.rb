@@ -22,4 +22,12 @@
 class LectureSerializer < ActiveModel::Serializer
   attributes :id, :title, :duration, :session, :starting_time
   has_one :track
+
+  class SimpleLectureSerializer < ActiveModel::Serializer
+    attributes :title, :duration, :session, :starting_time, :track
+
+    def track
+      TrackSerializer::SimpleTrackSerializer.new(object.track)
+    end
+  end
 end
