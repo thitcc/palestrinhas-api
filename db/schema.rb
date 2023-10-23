@@ -10,9 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_20_012852) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_23_125852) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "conferences", force: :cascade do |t|
+    t.string "title", null: false
+    t.datetime "start_date", null: false
+    t.datetime "end_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "lectures", force: :cascade do |t|
     t.string "title", null: false
@@ -21,4 +29,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_20_012852) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tracks", force: :cascade do |t|
+    t.string "identifier", null: false
+    t.integer "morning_session_start"
+    t.integer "morning_session_end"
+    t.integer "afternoon_session_start"
+    t.integer "afternoon_session_end"
+    t.integer "networking_event_start"
+    t.bigint "conference_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conference_id"], name: "index_tracks_on_conference_id"
+  end
+
+  add_foreign_key "tracks", "conferences"
 end
