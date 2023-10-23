@@ -102,7 +102,7 @@ Layout/SpaceInsidePercentLiteralDelimiters:
 # Offense count: 1
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes.
 Metrics/AbcSize:
-  Max: 19
+  Enabled: false
 
 # Offense count: 2
 # Configuration parameters: CountComments, CountAsOne, AllowedMethods, AllowedPatterns.
@@ -118,7 +118,7 @@ Metrics/CyclomaticComplexity:
 # Offense count: 2
 # Configuration parameters: CountComments, CountAsOne, AllowedMethods, AllowedPatterns.
 Metrics/MethodLength:
-  Max: 16
+  Enabled: false
 
 # Offense count: 1
 # Configuration parameters: AllowedMethods, AllowedPatterns.

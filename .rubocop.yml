@@ -7,3 +7,15 @@ require:
 
 RSpec/ImplicitExpect:
   Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/RedundantReturn:
+  Enabled: false
+
+Style/MethodDefParentheses:
+  Enabled: false
+
+Metrics/ClassLength:
+  Max: 200
