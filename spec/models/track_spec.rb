@@ -26,6 +26,7 @@ require 'rails_helper'
 RSpec.describe Track, type: :model do
   describe 'associations' do
     it { should belong_to(:conference) }
+    it { should have_many(:lectures).dependent(:destroy) }
   end
 
   describe 'validations' do

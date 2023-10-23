@@ -23,7 +23,9 @@ RSpec.describe LectureOrganizerService, type: :service do
     end
 
     context 'when not all lectures can be allocated within the tracks' do
-      let!(:lectures) { create_list(:lecture, 99) }
+      let!(:conference) { create(:conference) }
+      let!(:track) { create(:track, conference: conference) }
+      let!(:lectures) { create_list(:lecture, 99, track: track) }
 
       it 'returns a message indicating not all lectures could be allocated' do
         result = described_class.organize(lectures)

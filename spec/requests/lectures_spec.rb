@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe '/lectures', type: :request do
-  let!(:lectures) { create_list(:lecture, 10) }
+  let!(:conference) { create(:conference) }
+  let!(:track) { create(:track, conference: conference) }
+  let!(:lectures) { create_list(:lecture, 10, track: track) }
   let(:lecture_id) { lectures.first.id }
 
   describe 'GET /lectures' do
@@ -33,7 +35,7 @@ RSpec.describe '/lectures', type: :request do
   end
 
   describe 'POST /lectures' do
-    let(:valid_attributes) { { title: 'Foobar', duration: 30 } }
+    let(:valid_attributes) { { title: 'Foobar', duration: 30, track_id: track.id } }
     let(:invalid_attributes) { { title: 'Foobar' } }
 
     context 'when the request is valid' do

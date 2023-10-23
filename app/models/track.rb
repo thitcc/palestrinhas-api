@@ -24,6 +24,8 @@
 class Track < ApplicationRecord
   belongs_to :conference
 
+  has_many :lectures, dependent: :destroy
+
   before_create :set_default_times
 
   validates :identifier, presence: true
