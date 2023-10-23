@@ -5,10 +5,7 @@
 - [Sobre](#sobre)
 - [Funcionalidades](#funcionalidades)
 - [Pré-Requisitos](#pré-requisitos)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Bibliotecas](#bibliotecas)
-- [Autores](#autores)
-- [Licença](#licença)
 - [Referências](#referências)
 
 ## Sobre
@@ -60,8 +57,6 @@ rails s
 
 Agora, a API estará disponível em [http://localhost:3000](http://localhost:3000).
 
----
-
 ## Testes
 
 ### Para executar os testes, utilize o comando:
@@ -73,6 +68,8 @@ rspec
 ## Postman Collection
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/2668350-847ca4a5-7a5e-4935-beee-32b95cf59b3e?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D2668350-847ca4a5-7a5e-4935-beee-32b95cf59b3e%26entityType%3Dcollection%26workspaceId%3Ddab0cd06-e883-4ad2-bb3f-a3ca761bc7d6)
+
+![image](https://github.com/thitcc/palestrinhas-api/assets/30185790/4f47ed38-3ed1-433e-a615-b217b7919db6)
 
 ## Bibliotecas
 
