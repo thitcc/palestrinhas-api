@@ -10,7 +10,7 @@
 #
 FactoryBot.define do
   factory :lecture do
-    title { "MyString" }
-    duration { 1 }
+    title { Faker::Fantasy::Tolkien.poem }
+    duration { Faker::Number.within(range: 5..60) }
   end
 end
