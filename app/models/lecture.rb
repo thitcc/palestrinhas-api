@@ -9,7 +9,7 @@
 #  title         :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  track_id      :bigint           not null
+#  track_id      :bigint
 #
 # Indexes
 #
@@ -24,7 +24,8 @@ class Lecture < ApplicationRecord
 
   SESSIONS = %w[morning afternoon].freeze
 
-  validates :title, presence: true
-  validates :duration, :starting_time, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validates :session, presence: true, inclusion: { in: SESSIONS }
+  validates :title, :duration, presence: true
+  validates :duration, :starting_time, numericality: { only_integer: true, greater_than: 0 }
+
+  validates :session, inclusion: { in: SESSIONS, allow_blank: true }
 end
