@@ -20,6 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_172035) do
     t.datetime "end_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "schedule"
   end
 
   create_table "lectures", force: :cascade do |t|

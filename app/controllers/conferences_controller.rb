@@ -38,12 +38,14 @@ class ConferencesController < ApplicationController
     @conference.destroy
   end
 
+  # POST /conferences/1/organize
   def organize
     uploaded_file = params[:file]
 
     if uploaded_file.present?
       lectures = process_file(uploaded_file)
       organized_schedule = Organizer::LectureOrganizerBacktrackService.organize(@conference, lectures)
+      @conference.update(schedule: JSON.parse(organized_schedule.to_json))
       render json: { schedule: organized_schedule }, status: :ok
     else
       render json: { error: 'Arquivo não fornecido' }, status: :bad_request
