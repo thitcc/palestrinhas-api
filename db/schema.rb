@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_23_172035) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_24_011802) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_172035) do
     t.datetime "end_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "schedule"
   end
 
   create_table "lectures", force: :cascade do |t|
@@ -27,7 +28,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_172035) do
     t.integer "duration", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "track_id", null: false
+    t.bigint "track_id"
     t.string "session"
     t.integer "starting_time"
     t.index ["track_id"], name: "index_lectures_on_track_id"

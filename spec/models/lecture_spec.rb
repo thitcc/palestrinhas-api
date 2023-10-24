@@ -9,7 +9,7 @@
 #  title         :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  track_id      :bigint           not null
+#  track_id      :bigint
 #
 # Indexes
 #
@@ -27,7 +27,7 @@ RSpec.describe Lecture, type: :model do
   end
 
   describe 'validations' do
-    %i[title duration session starting_time].each { |attribute| it { should validate_presence_of(attribute) } }
+    %i[title duration].each { |attribute| it { should validate_presence_of(attribute) } }
 
     %i[duration starting_time].each do |attribute|
       it {
@@ -36,6 +36,6 @@ RSpec.describe Lecture, type: :model do
       }
     end
 
-    it { should validate_inclusion_of(:session).in_array(Lecture::SESSIONS) }
+    it { should validate_inclusion_of(:session).in_array(Lecture::SESSIONS).allow_blank }
   end
 end

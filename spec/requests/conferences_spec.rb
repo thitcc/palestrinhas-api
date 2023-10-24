@@ -90,7 +90,7 @@ RSpec.describe '/conferences', type: :request do
 
   describe 'POST /conferences/:id/organize' do
     let!(:conference) { create(:conference) }
-    let(:file) { fixture_file_upload('files/lectures_input.txt', 'text/plain') }
+    let(:file) { fixture_file_upload('lectures_input.txt', 'text/plain') }
 
     context 'when the file is provided' do
       before { post "/conferences/#{conference.id}/organize", params: { file: file } }
