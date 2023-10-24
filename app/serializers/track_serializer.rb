@@ -24,6 +24,7 @@
 class TrackSerializer < ActiveModel::Serializer
   attributes :id, :identifier, :morning_session_start, :morning_session_end, :afternoon_session_start, :afternoon_session_end, :networking_event_start
   has_one :conference
+  has_many :lectures
 
   class SimpleTrackSerializer < ActiveModel::Serializer
     attributes :identifier
